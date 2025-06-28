@@ -83,3 +83,20 @@ export interface ConsultationHistoryProps {
   showFullHistory?: boolean;
   onViewAll?: () => void;
 }
+
+export interface SignUpParams {
+  uid: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface SignInParams {
+  email: string;
+  idToken: string;
+}
+export interface User {
+  name: string;
+  email: string;
+  id: string;
+}

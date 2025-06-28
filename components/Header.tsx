@@ -1,13 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, User } from 'lucide-react';
+import { isAuthenticated, signOut } from '@/lib/actions/auth.action';
 
 const Header: React.FC = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const router = useRouter();
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authStatus = await isAuthenticated();
+      setAuthenticated(authStatus);
+    };
+    checkAuth();
+  }, []);
+
 
   const navItems = [
     { href: '/', label: 'Home', key: 'home' },
@@ -23,6 +35,14 @@ const Header: React.FC = () => {
 
   const toggleMobileMenu = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+    const handleClick = () => {
+    if (authenticated) {
+      signOut();
+    } else {
+      router.push('/sign-in');
+    }
   };
 
   return (
@@ -72,8 +92,10 @@ const Header: React.FC = () => {
               >
                 {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-              <button className="p-2 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
-                <User className="w-5 h-5" />
+              <button
+              onClick={signOut}
+              className="px-6 py-2 rounded-xl bg-emerald-50 flex text-sm text-emerald-600 hover:bg-emerald-100 transition-colors">
+                <User className="w-5 h-5" /> {authenticated === null ? 'Loading...' : authenticated ? 'Sign Out' : 'Sign In'}
               </button>
             </div>
           </div>

@@ -11,7 +11,7 @@ export default function ReportsPage() {
     // Load consultation history from localStorage or API
     const loadConsultationHistory = () => {
       try {
-        // You could load from localStorage, API, etc.
+       
         const saved = localStorage.getItem('consultationHistory');
         if (saved) {
           setConsultationHistory(JSON.parse(saved));
@@ -25,7 +25,7 @@ export default function ReportsPage() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto mt-15">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-4">
           Consultation History

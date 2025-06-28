@@ -4,7 +4,7 @@ import { ChevronRight, Play, Shield, Brain } from 'lucide-react';
 
 const HeroSection: React.FC<{ onStartConsultation: () => void }> = ({ onStartConsultation }) => {
   return (
-    <section className="relative overflow-hidden bg-white pb-24 pt-28">
+    <section className="relative overflow-hidden bg-white pb-24 pt-28 mt-5">
       {/* Decorative Background */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-emerald-50 to-teal-50"></div>
 

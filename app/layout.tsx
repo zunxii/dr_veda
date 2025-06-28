@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={poppins.className}>
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
           <Header />
-          <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+          <main className="pt-10 pb-5">
             {children}
           </main>
         </div>

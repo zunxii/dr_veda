@@ -3,7 +3,7 @@ import React from 'react'
 
 const ProfileSection: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mt-13 mx-auto space-y-8">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-4">
           Your Health Profile
