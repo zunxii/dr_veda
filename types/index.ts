@@ -1,5 +1,3 @@
-export type ScreenType = 'home' | 'consultation' | 'reports' | 'profile';
-
 export interface ConsultationData {
   id: string;
   date: string;
@@ -11,12 +9,25 @@ export interface ConsultationData {
   reportData?: UploadedReport;
 }
 
+export interface CreateReportParams{
+  userId : string;
+  formData : PersonalFormData;
+  transcript: { role: string; content: string }[];
+  reportId: string;
+}
+
 export interface DoshaResult {
   type: 'vata' | 'pitta' | 'kapha';
   percentage: number;
   description: string;
 }
 
+export interface PersonalFormData {
+  name: string;
+    age: number;
+    gender: string;
+    symptoms: string;
+}
 export interface PersonalFormProps {
   onSubmit: (data: {
     name: string;
@@ -51,12 +62,6 @@ export interface UploadedReport {
   };
   aiInsights?: string[];
 }
-
-export interface HeaderProps {
-  currentScreen: ScreenType;
-  onNavigate: (screen: ScreenType) => void;
-}
-
 export interface HeroSectionProps {
   onStartConsultation: () => void;
 }
