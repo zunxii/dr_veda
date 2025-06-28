@@ -2,8 +2,6 @@
 
 import React, { useState, useCallback } from 'react';
 import VoiceConsultation from '@/components/VoiceConsultation';
-import ReportUpload from '@/components/ReportUpload';
-import ConsultationHistory from '@/components/ConsultationHistory';
 import PersonalForm from '@/components/PersonalForm';
 import { VoiceSession, UploadedReport } from '@/types';
 
@@ -15,6 +13,7 @@ export default function ConsultationPage() {
     duration: 0,
     isProcessing: false
   });
+
   const [uploadedReport, setUploadedReport] = useState<UploadedReport | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
 
@@ -65,32 +64,41 @@ export default function ConsultationPage() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 px-4 py-12">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-4">
-          Start Your Consultation
-        </h1>
-        <p className="text-slate-600 max-w-2xl mx-auto">
-          Follow the steps to begin your AI-assisted Ayurvedic consultation
-        </p>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-8 sm:py-12">
+      <div className="w-full max-w-3xl space-y-6 sm:space-y-10">
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
+            Start Your Consultation
+          </h1>
+          <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">
+            Follow the steps to begin your AI-assisted Ayurvedic consultation
+          </p>
+        </div>
 
-      {!personalInfo ? (
-        <PersonalForm onSubmit={(data) => setPersonalInfo(data)} />
-      ) : !uploadedReport ? (
-        <ReportUpload
-          onUpload={handleReportUpload}
-          uploadedReport={uploadedReport}
-          isLoading={isLoading}
-        />
-      ) : (
-        <VoiceConsultation
-          voiceSession={voiceSession}
-          onToggleVoice={handleToggleVoice}
-          onEndSession={handleEndVoiceSession}
-          isLoading={isLoading}
-        />
-      )}
+        <div className="w-full">
+          {!personalInfo ? (
+            <PersonalForm
+              onSubmit={(data) => {
+                setPersonalInfo(data);
+                if (data.uploadedReport) {
+                  setUploadedReport(data.uploadedReport);
+                }
+              }}
+              onUpload={handleReportUpload}
+              uploadedReport={uploadedReport}
+              isLoading={isLoading}
+              inlineUpload
+            />
+          ) : (
+            <VoiceConsultation
+              voiceSession={voiceSession}
+              onToggleVoice={handleToggleVoice}
+              onEndSession={handleEndVoiceSession}
+              isLoading={isLoading}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -23,8 +23,13 @@ export interface PersonalFormProps {
     age: number;
     gender: string;
     symptoms: string;
+    uploadedReport: UploadedReport | null;
   }) => void;
-};
+  onUpload: (file: File) => Promise<void>;
+  uploadedReport: UploadedReport | null;
+  isLoading: boolean;
+  inlineUpload?: boolean;
+}
 
 export interface VoiceSession {
   isActive: boolean;
