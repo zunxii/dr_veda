@@ -1,11 +1,19 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import VoiceConsultation from '@/components/VoiceConsultation';
 import PersonalForm from '@/components/PersonalForm';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+
+import { isAuthenticated } from '@/lib/actions/auth.action';
 import { VoiceSession, UploadedReport } from '@/types';
 
 export default function ConsultationPage() {
+  const router = useRouter();
+
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [voiceSession, setVoiceSession] = useState<VoiceSession>({
     isActive: false,
@@ -16,6 +24,20 @@ export default function ConsultationPage() {
 
   const [uploadedReport, setUploadedReport] = useState<UploadedReport | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authStatus = await isAuthenticated();
+      setAuthenticated(authStatus);
+    };
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    if (authenticated === false) {
+      router.push('/sign-in');
+    }
+  }, [authenticated, router]);
 
   const handleToggleVoice = useCallback(async () => {
     setIsLoading(true);
@@ -43,6 +65,7 @@ export default function ConsultationPage() {
   const handleReportUpload = useCallback(async (file: File) => {
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
+
     const mockReport: UploadedReport = {
       id: Date.now().toString(),
       fileName: file.name,
@@ -59,10 +82,18 @@ export default function ConsultationPage() {
         'Heart rate indicates good cardiovascular health'
       ]
     };
+
     setUploadedReport(mockReport);
     setIsLoading(false);
   }, []);
 
+    if (authenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-8 sm:py-12">
       <div className="w-full max-w-3xl space-y-6 sm:space-y-10">

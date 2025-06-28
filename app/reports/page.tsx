@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import ConsultationHistory from '@/components/ConsultationHistory';
 import { ConsultationData } from '@/types';
+import { useRouter } from 'next/navigation';
+import { isAuthenticated } from '@/lib/actions/auth.action';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function ReportsPage() {
   const [consultationHistory, setConsultationHistory] = useState<ConsultationData[]>([]);
@@ -24,6 +27,28 @@ export default function ReportsPage() {
     loadConsultationHistory();
   }, []);
 
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authStatus = await isAuthenticated();
+      setAuthenticated(authStatus);
+    };
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    if (authenticated === false) {
+      router.push('/sign-in');
+    }
+  }, [authenticated, router]);
+
+    if (authenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );}
   return (
     <div className="max-w-6xl mx-auto mt-15">
       <div className="mb-8">
