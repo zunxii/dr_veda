@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
+vision-cloud.json
 # testing
 /coverage
 

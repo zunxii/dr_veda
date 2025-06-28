@@ -17,6 +17,15 @@ export interface DoshaResult {
   description: string;
 }
 
+export interface PersonalFormProps {
+  onSubmit: (data: {
+    name: string;
+    age: number;
+    gender: string;
+    symptoms: string;
+  }) => void;
+};
+
 export interface VoiceSession {
   isActive: boolean;
   transcript: string;

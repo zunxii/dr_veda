@@ -1,4 +1,3 @@
-// components/VoiceConsultation.tsx
 import React from 'react';
 import { Mic, MicOff } from 'lucide-react';
 import { VoiceConsultationProps } from '../types';
