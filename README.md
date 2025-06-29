@@ -8,19 +8,25 @@ Dr. Veda is an AI-powered voice consultation app that allows users to speak natu
 - 🧠 **Automatic Transcription & Gemini Report Generation**
 - 🪔 **Ayurvedic Analysis**: Dosha imbalance, conditions, and treatments
 - 🗂️ **Consultation History** with filters, duration, symptoms, and more
+- 📥 **Share & Download** reports directly from the dashboard
 - 🔁 **Real-time Updates** on speech activity and timer
 - 🌐 **Next.js App Router + TailwindCSS + TypeScript**
 
 ## 🚀 Demo
 
-🌍 **[Live Demo]([https://dr-veda-demo.vercel.app](https://dr-veda.vercel.app/))**
+🌍 **[Live Demo](https://dr-veda-demo.vercel.app)**
 
+🧪 **Test Login**: Not implemented / optional
 
 ## 📸 Screenshots
 
-| Voice Consultation | Consultation History | Ayurvedic Report |
-|-------------------|---------------------|------------------|
-| ![Voice Consultation](screenshot1.png) | ![Consultation History](screenshot2.png) | ![Ayurvedic Report](screenshot3.png) |
+| Authentication | Voice Consultation |
+|---------------|-------------------|
+| ![Authentication](public/auth.png) | ![Voice Consultation](public/voice_screen.png) |
+
+| Report Generation | Report History |
+|-------------------|----------------|
+| ![Report Generation](public/report.png) | ![Report History](public/report-history.png) |
 
 ## 🧩 Tech Stack
 
@@ -71,6 +77,7 @@ Create a `.env.local` file in the root:
 
 ```bash
 NEXT_PUBLIC_VAPI_WORKFLOW_ID=your_vapi_workflow_id
+NEXT_PUBLIC_VAPI_PUBLIC_KEY=your_vapi_public_key
 GOOGLE_API_KEY=your_google_gemini_key
 FIREBASE_API_KEY=xxxxxx
 FIREBASE_PROJECT_ID=xxxxxx
@@ -103,7 +110,7 @@ App will be available at [http://localhost:3000](http://localhost:3000)
 
 Click below to deploy instantly:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zunxii/dr-veda)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/dr-veda)
 
 ## 📌 Roadmap
 
@@ -118,7 +125,6 @@ Click below to deploy instantly:
 
 - [Vapi.ai](https://vapi.ai) for the voice agent SDK
 - [Gemini API](https://ai.google.dev/) by Google
-- [Lucide](https://lucide.dev/) for the icons
 - [Tailwind UI](https://tailwindui.com/) inspiration
 
 ## 📃 License
@@ -130,3 +136,4 @@ MIT License. Feel free to fork, extend, and contribute!
 Have feedback, feature requests, or want to contribute?
 
 - 📧 **Email**: zunxii.2210@gmail.com
+  
