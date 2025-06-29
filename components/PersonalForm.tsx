@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 type PersonalFormProps = {
   onSubmit: (data: any) => void;
   isLoading?: boolean;
-  inlineUpload?: boolean; // can be kept for compatibility, but unused now
+  inlineUpload?: boolean; // still compatible
 };
 
 const PersonalForm: React.FC<PersonalFormProps> = ({
@@ -16,9 +16,10 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
     name: '',
     age: '',
     gender: '',
+    symptoms: '', 
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -83,6 +84,22 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
             <option value="male">Male</option>
             <option value="other">Other</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-600 mb-1" htmlFor="symptoms">
+            Symptoms
+          </label>
+          <textarea
+            id="symptoms"
+            name="symptoms"
+            required
+            value={formData.symptoms}
+            onChange={handleChange}
+            rows={4}
+            placeholder="Describe your symptoms here..."
+            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-teal-500 focus:outline-none"
+          />
         </div>
       </div>
 

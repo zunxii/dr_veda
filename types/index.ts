@@ -1,4 +1,5 @@
 export interface ConsultationData {
+  analysis: any;
   id: string;
   createdAt: string;
   symptoms: string;
@@ -67,11 +68,31 @@ export interface HeroSectionProps {
   onStartConsultation: () => void;
 }
 
+export interface PrescriptionItem {
+  treatment: string;
+  dosage: string;
+  frequency: string;
+}
+
+export interface AyurvedicDiagnosis {
+  dosha_imbalance_summary: string;
+  possible_ayurvedic_condition: string;
+  personalized_prescription: PrescriptionItem[];
+  precautionary_advice: string[];
+  note: string;
+}
+export interface ConsultationHistoryProps {
+  consultations: ConsultationData[];
+  showFullHistory?: boolean;
+  onViewAll?: () => void;
+}
+
 export interface VoiceConsultationProps {
   voiceSession: VoiceSession;
   onToggleVoice: () => void;
   onEndSession: () => void;
   isLoading: boolean;
+  reportId : string
 }
 
 export interface ReportUploadProps {

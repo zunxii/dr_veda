@@ -7,7 +7,6 @@ export default async function ReportsPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    // Redirect to login if not authenticated
     redirect("/sign-in");
   }
 

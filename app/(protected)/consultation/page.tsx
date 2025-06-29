@@ -21,31 +21,30 @@ export default function ConsultationPage() {
   const [uploadedReport, setUploadedReport] = useState<UploadedReport | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
 
-  // Step 1: Handle personal form submission
-  const handleFormSubmit = async (data: any) => {
+  const [reportId, setReportId] = useState<string>(''); 
 
+  const handleFormSubmit = async (data: any) => {
     try {
       const result = await submitFormData(data);
-      if (result.success) {
-      console.log("Saved to Firestore with reportId:", result.reportId);
-      setPersonalInfo(data);
-      setStep(2);
-    } else {
-      console.error(result.message);
-    }
+      if (result.success && result.reportId) {
+        console.log("Saved to Firestore with reportId:", result.reportId);
+        setPersonalInfo(data);
+        setReportId(result.reportId);
+        setStep(2);
+      } else {
+        console.error(result.message);
+      }
     } catch (error) {
       console.error("Unexpected error:", error);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   };
 
-  // Step 2: Handle report upload
   const handleReportUpload = useCallback(async (file: File) => {
     setIsLoading(true);
 
-    // Simulate upload & processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000)); // simulate
 
     const mockReport: UploadedReport = {
       id: Date.now().toString(),
@@ -65,11 +64,10 @@ export default function ConsultationPage() {
     };
 
     setUploadedReport(mockReport);
-    setStep(3); // Proceed to voice consultation
+    setStep(3);
     setIsLoading(false);
   }, []);
 
-  // Step 3: Voice Consultation
   const handleToggleVoice = useCallback(async () => {
     setIsLoading(true);
     if (voiceSession.isActive) {
@@ -115,17 +113,18 @@ export default function ConsultationPage() {
           )}
 
           {step === 2 && (
-           <ReportUpload
-                onUpload={handleReportUpload}
-                uploadedReport={uploadedReport}
-                isLoading={isLoading}
-                onSubmit={() => setStep(3)} 
-                onSkip={() => setStep(3)}   
+            <ReportUpload
+              onUpload={handleReportUpload}
+              uploadedReport={uploadedReport}
+              isLoading={isLoading}
+              onSubmit={() => setStep(3)} 
+              onSkip={() => setStep(3)}   
             />
           )}
 
-          {step === 3 && (
+          {step === 3 && reportId && (
             <VoiceConsultation
+              reportId={reportId} // ✅ PASSED HERE
               voiceSession={voiceSession}
               onToggleVoice={handleToggleVoice}
               onEndSession={handleEndVoiceSession}
