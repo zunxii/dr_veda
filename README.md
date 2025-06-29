@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🩺 Dr. Veda – AI-Powered Doctor Consultation
 
-## Getting Started
+Dr. Veda is an AI-powered voice consultation app that allows users to speak naturally about their health concerns. It transcribes the conversation, analyzes symptoms using Google Gemini, generates Ayurvedic reports, and presents a clean consultation history UI with downloadable results.
 
-First, run the development server:
+## ✨ Features
+
+- 🎙️ **Voice Consultation with AI** using Vapi SDK
+- 🧠 **Automatic Transcription & Gemini Report Generation**
+- 🪔 **Ayurvedic Analysis**: Dosha imbalance, conditions, and treatments
+- 🗂️ **Consultation History** with filters, duration, symptoms, and more
+- 🔁 **Real-time Updates** on speech activity and timer
+- 🌐 **Next.js App Router + TailwindCSS + TypeScript**
+
+## 🚀 Demo
+
+🌍 **[Live Demo]([https://dr-veda-demo.vercel.app](https://dr-veda.vercel.app/))**
+
+
+## 📸 Screenshots
+
+| Voice Consultation | Consultation History | Ayurvedic Report |
+|-------------------|---------------------|------------------|
+| ![Voice Consultation](screenshot1.png) | ![Consultation History](screenshot2.png) | ![Ayurvedic Report](screenshot3.png) |
+
+## 🧩 Tech Stack
+
+| Technology | Description |
+|-----------|-------------|
+| **Next.js 14** | App Router, SSR, Optimized routing |
+| **Tailwind CSS** | Utility-first, responsive styling |
+| **TypeScript** | Strict types and interfaces |
+| **Vapi SDK** | Voice agent integration (WebRTC) |
+| **Google Gemini API** | Health diagnosis & summarization |
+| **Firebase Firestore** | Real-time transcription logging |
+| **Lucide Icons** | Iconography across UI |
+
+## 📁 Project Structure
+
+```bash
+/components
+  /ui               → Shared UI like LoadingSpinner
+  ConsultationHistory.tsx
+  VoiceConsultation.tsx
+/pages
+  /reports/[id]     → Dynamic report viewer
+/lib
+  /actions          → API + Gemini integration
+  vapi.sdk.ts       → Vapi Web SDK instance
+```
+
+## 🛠️ Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/dr-veda.git
+cd dr-veda
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Setup Environment Variables
+
+Create a `.env.local` file in the root:
+
+```bash
+NEXT_PUBLIC_VAPI_WORKFLOW_ID=your_vapi_workflow_id
+GOOGLE_API_KEY=your_google_gemini_key
+FIREBASE_API_KEY=xxxxxx
+FIREBASE_PROJECT_ID=xxxxxx
+FIREBASE_APP_ID=xxxxxx
+```
+
+🔐 **Don't commit this file** — it's ignored via `.gitignore`.
+
+### 4. Run the Dev Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App will be available at [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **User clicks Start Consultation** → triggers Vapi call
+2. **Vapi transcribes live speech** → text is stored via `appendTranscription()`
+3. **When the call ends:**
+   - It triggers Gemini API to summarize health issues
+   - Generates a personalized Ayurvedic report
+   - Final report is saved via `finalizeReport()`
+4. **User is redirected** to `/reports/[slug]` to view it
 
-## Learn More
+## 📦 Deploying on Vercel
 
-To learn more about Next.js, take a look at the following resources:
+Click below to deploy instantly:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zunxii/dr-veda)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Roadmap
 
-## Deploy on Vercel
+- ✅ Voice consultation with transcription
+- ✅ Ayurvedic analysis using Gemini
+- ✅ Report generation + download
+- ⏳ Authentication & user history sync
+- ⏳ Mobile UI improvements
+- ⏳ Admin dashboard for monitoring
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🙏 Acknowledgments
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Vapi.ai](https://vapi.ai) for the voice agent SDK
+- [Gemini API](https://ai.google.dev/) by Google
+- [Lucide](https://lucide.dev/) for the icons
+- [Tailwind UI](https://tailwindui.com/) inspiration
+
+## 📃 License
+
+MIT License. Feel free to fork, extend, and contribute!
+
+## ✉️ Contact
+
+Have feedback, feature requests, or want to contribute?
+
+- 📧 **Email**: zunxii.2210@gmail.com
