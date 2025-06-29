@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, LogIn, LogOut } from 'lucide-react';
+import { Menu, X, LogIn, LogOut, Leaf, Heart, Sparkles } from 'lucide-react';
 import { isAuthenticated, signOut as serverSignOut } from '@/lib/actions/auth.action';
 
 const Header: React.FC = () => {
@@ -27,7 +27,6 @@ const Header: React.FC = () => {
     { href: '/', label: 'Home', key: 'home' },
     { href: '/consultation', label: 'Consultation', key: 'consultation' },
     { href: '/reports', label: 'Reports', key: 'reports' },
-    { href: '/profile', label: 'Profile', key: 'profile' }
   ];
 
   const isActive = (href: string) => {
@@ -54,17 +53,35 @@ const Header: React.FC = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-emerald-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg" />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full animate-pulse" />
+                {/* Main circular container with gradient */}
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg border border-emerald-200/50">
+                  {/* Central leaf icon */}
+                  <Leaf className="w-6 h-6 text-white drop-shadow-sm" />
+                </div>
+                
+                {/* Heart accent - top right */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full flex items-center justify-center shadow-md">
+                  <Heart className="w-3 h-3 text-white fill-white" />
+                </div>
+                
+                {/* Sparkle accent - bottom left */}
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                  <Sparkles className="w-2.5 h-2.5 text-white fill-white" />
+                </div>
+                
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 blur-md -z-10 scale-110"></div>
               </div>
+              
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-800 bg-clip-text text-transparent">
                   Dr. Veda
                 </h1>
-                <p className="text-xs text-emerald-600 font-medium">Virtual Ayurvedic Doctor</p>
+                <p className="text-xs text-emerald-600/80 font-medium tracking-wide">
+                  Virtual Ayurvedic Doctor
+                </p>
               </div>
             </Link>
 

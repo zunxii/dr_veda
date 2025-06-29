@@ -58,7 +58,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
           idToken,
         });
 
-        router.push('/');
+        router.push('/consultation');
       }
     } catch (error) {
       console.log(error);

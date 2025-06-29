@@ -20,7 +20,7 @@ const ConsultationHistory: React.FC<ConsultationHistoryProps> = ({
   onViewAll
 }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mb-10">
       {consultations.map((consultation) => (
         <div
           key={consultation.id}
