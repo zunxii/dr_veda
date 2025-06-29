@@ -34,8 +34,8 @@ export default async function ConsultationDetailPage({ params }: Params) {
     transcript?: { role: string; content: string }[];
     analysis?: {
       ayurvedic_diagnosis: {
-        dosha_imbalance_summary: string;
-        possible_ayurvedic_condition: string;
+        dosha_imbalance_summary?: string;
+        possible_ayurvedic_condition?: string;
         personalized_prescription: {
           treatment: string;
           dosage: string;
