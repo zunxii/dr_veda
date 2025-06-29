@@ -55,28 +55,17 @@ const Header: React.FC = () => {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
               <div className="relative">
-                {/* Main circular container with gradient */}
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg border border-emerald-200/50">
-                  {/* Central leaf icon */}
-                  <Leaf className="w-6 h-6 text-white drop-shadow-sm" />
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg border border-emerald-200/50">
+                  <Leaf className="w-5 h-5 text-white drop-shadow-sm" />
                 </div>
-                
-                {/* Heart accent - top right */}
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full flex items-center justify-center shadow-md">
-                  <Heart className="w-3 h-3 text-white fill-white" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full flex items-center justify-center shadow-md">
+                  <Heart className="w-2 h-2 text-white fill-white" />
                 </div>
-                
-                {/* Sparkle accent - bottom left */}
-                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center shadow-md animate-pulse">
-                  <Sparkles className="w-2.5 h-2.5 text-white fill-white" />
-                </div>
-                
-                {/* Subtle glow effect */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 blur-md -z-10 scale-110"></div>
               </div>
               
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-800 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-800 bg-clip-text text-transparent">
                   Dr. Veda
                 </h1>
                 <p className="text-xs text-emerald-600/80 font-medium tracking-wide">
