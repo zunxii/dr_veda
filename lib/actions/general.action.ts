@@ -4,6 +4,8 @@ import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { db } from "@/firebase/admin";
 import { ConsultationData, CreateReportParams } from "@/types";
+import { getCurrentUser } from "./auth.action";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function getReportByUserId(userId: string): Promise<ConsultationData[]> {
   const reports = await db.collection("reports")
@@ -80,5 +82,89 @@ ${formattedTranscript}
   } catch (error) {
     console.error("❌ Failed to generate or store report:", error);
     throw error;
+  }
+}
+
+export async function submitFormData(formData : FormData){
+  try {
+    const user = await getCurrentUser();
+    if(!user){
+      return {success : false, message : 'Unauthorized'};
+    }
+
+    const reportId = uuidv4();
+
+    await db.collection('reports').doc(reportId).set({
+      userId : user.id,
+      formData,
+      createdAt : new Date().toISOString(),
+      uploadReport:{
+        analysisStatus: 'pending',
+      }
+    })
+
+    return {
+      success : true,
+      reportId,
+      message : 'Form data saved successfully'
+    }
+
+  } catch (error) {
+     console.error('Error saving form data:', error);
+    return {
+      success: false,
+      message: 'Failed to save form data. Please try again.',};
+  }
+}
+
+export async function uploadOCRData(reportId:string,ocrData:any){
+  try {
+    await db.collection('reports').doc(reportId).update({
+      ocrData,
+      updatedAt : new Date().toISOString(),
+    })
+    return {
+      succees : true,
+    }
+  } catch (error) {
+    console.error('Failed to upload OCR data:', error);
+    return { success: false, error: 'Failed to upload OCR data' };
+  }
+}
+
+export async function appendTranscription(reportId:string,message: { role: string, content: string }){
+  try {
+    const docRef = db.collection('reports').doc(reportId);
+    const doc = await docRef.get();
+
+    if(!doc.exists){
+      return { success : false, error : 'Report not found'}
+    }
+
+    const currentTranscript = doc.data()?.transcript || [];
+
+    await docRef.update({
+      transcript: [...currentTranscript, message],
+      updatedAt : new Date().toISOString(),
+    })
+    return {success : true}
+
+  } catch (error) {
+    console.error('Failed to append transcript:', error);
+    return { success: false, error: 'Failed to append transcript' };
+  }
+}
+
+export async function finalizeReport(reportId: string, geminiOutput:any){
+  try {
+    await db.collection('reports').doc(reportId).update({
+      analysis : geminiOutput,
+      completedAt :  new Date().toISOString,
+      updateAt : new Date().toDateString
+    })
+    return {success : true}
+  } catch (error) {
+    console.error('Failed to finalize report:', error);
+    return { success: false, error: 'Failed to finalize report' };
   }
 }

@@ -1,20 +1,16 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
+import React, { useState, useCallback } from 'react';
 import VoiceConsultation from '@/components/VoiceConsultation';
 import PersonalForm from '@/components/PersonalForm';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-
-import { isAuthenticated } from '@/lib/actions/auth.action';
+import ReportUpload from '@/components/ReportUpload';
 import { VoiceSession, UploadedReport } from '@/types';
+import { submitFormData } from '@/lib/actions/general.action';
 
 export default function ConsultationPage() {
-  const router = useRouter();
-
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+
   const [voiceSession, setVoiceSession] = useState<VoiceSession>({
     isActive: false,
     transcript: '',
@@ -25,20 +21,55 @@ export default function ConsultationPage() {
   const [uploadedReport, setUploadedReport] = useState<UploadedReport | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const authStatus = await isAuthenticated();
-      setAuthenticated(authStatus);
+  // Step 1: Handle personal form submission
+  const handleFormSubmit = async (data: any) => {
+
+    try {
+      const result = await submitFormData(data);
+      if (result.success) {
+      console.log("Saved to Firestore with reportId:", result.reportId);
+      setPersonalInfo(data);
+      setStep(2);
+    } else {
+      console.error(result.message);
+    }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
+  // Step 2: Handle report upload
+  const handleReportUpload = useCallback(async (file: File) => {
+    setIsLoading(true);
+
+    // Simulate upload & processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const mockReport: UploadedReport = {
+      id: Date.now().toString(),
+      fileName: file.name,
+      uploadDate: new Date().toISOString(),
+      analysisStatus: 'completed',
+      extractedData: {
+        bloodPressure: '120/80 mmHg',
+        heartRate: '72 bpm',
+        bloodSugar: '95 mg/dL',
+        cholesterol: '185 mg/dL'
+      },
+      aiInsights: [
+        'Blood pressure is within normal range',
+        'Heart rate indicates good cardiovascular health'
+      ]
     };
-    checkAuth();
+
+    setUploadedReport(mockReport);
+    setStep(3); // Proceed to voice consultation
+    setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    if (authenticated === false) {
-      router.push('/sign-in');
-    }
-  }, [authenticated, router]);
-
+  // Step 3: Voice Consultation
   const handleToggleVoice = useCallback(async () => {
     setIsLoading(true);
     if (voiceSession.isActive) {
@@ -62,38 +93,6 @@ export default function ConsultationPage() {
     setIsLoading(false);
   }, []);
 
-  const handleReportUpload = useCallback(async (file: File) => {
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const mockReport: UploadedReport = {
-      id: Date.now().toString(),
-      fileName: file.name,
-      uploadDate: new Date().toISOString(),
-      analysisStatus: 'completed',
-      extractedData: {
-        bloodPressure: '120/80 mmHg',
-        heartRate: '72 bpm',
-        bloodSugar: '95 mg/dL',
-        cholesterol: '185 mg/dL'
-      },
-      aiInsights: [
-        'Blood pressure is within normal range',
-        'Heart rate indicates good cardiovascular health'
-      ]
-    };
-
-    setUploadedReport(mockReport);
-    setIsLoading(false);
-  }, []);
-
-    if (authenticated === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-8 sm:py-12">
       <div className="w-full max-w-3xl space-y-6 sm:space-y-10">
@@ -107,20 +106,25 @@ export default function ConsultationPage() {
         </div>
 
         <div className="w-full">
-          {!personalInfo ? (
+          {step === 1 && (
             <PersonalForm
-              onSubmit={(data) => {
-                setPersonalInfo(data);
-                if (data.uploadedReport) {
-                  setUploadedReport(data.uploadedReport);
-                }
-              }}
-              onUpload={handleReportUpload}
-              uploadedReport={uploadedReport}
+              onSubmit={handleFormSubmit}
               isLoading={isLoading}
-              inlineUpload
+              inlineUpload={false}
             />
-          ) : (
+          )}
+
+          {step === 2 && (
+           <ReportUpload
+                onUpload={handleReportUpload}
+                uploadedReport={uploadedReport}
+                isLoading={isLoading}
+                onSubmit={() => setStep(3)} 
+                onSkip={() => setStep(3)}   
+            />
+          )}
+
+          {step === 3 && (
             <VoiceConsultation
               voiceSession={voiceSession}
               onToggleVoice={handleToggleVoice}

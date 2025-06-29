@@ -3,14 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, User } from 'lucide-react';
-import { isAuthenticated, signOut } from '@/lib/actions/auth.action';
+import { Menu, X, LogIn, LogOut } from 'lucide-react';
+import { isAuthenticated, signOut as serverSignOut } from '@/lib/actions/auth.action';
 
 const Header: React.FC = () => {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const isAuthPage = pathname === '/sign-in' || pathname === '/sign-up';
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -19,7 +22,6 @@ const Header: React.FC = () => {
     };
     checkAuth();
   }, []);
-
 
   const navItems = [
     { href: '/', label: 'Home', key: 'home' },
@@ -33,16 +35,18 @@ const Header: React.FC = () => {
     return pathname.startsWith(href);
   };
 
-  const toggleMobileMenu = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const toggleMobileMenu = () => setMobileOpen(prev => !prev);
 
-    const handleClick = () => {
+  const handleAuthClick = async () => {
+    setLoading(true);
     if (authenticated) {
-      signOut();
+      await serverSignOut();
+      setAuthenticated(false);
+      router.push('/');
     } else {
       router.push('/sign-in');
     }
+    setLoading(false);
   };
 
   return (
@@ -65,73 +69,118 @@ const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    isActive(item.href)
-                      ? 'text-emerald-700 bg-emerald-50'
-                      : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-25'
-                  }`}
-                >
-                  {item.label}
-                  {isActive(item.href) && (
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-emerald-500 rounded-full" />
-                  )}
-                </Link>
-              ))}
-            </nav>
+            {!isAuthPage && (
+              <nav className="hidden md:flex items-center space-x-8">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      isActive(item.href)
+                        ? 'text-emerald-700 bg-emerald-50'
+                        : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-25'
+                    }`}
+                  >
+                    {item.label}
+                    {isActive(item.href) && (
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-emerald-500 rounded-full" />
+                    )}
+                  </Link>
+                ))}
+              </nav>
+            )}
 
-            {/* Mobile Menu + Profile Icon */}
+            {/* Mobile Menu & Auth */}
             <div className="flex items-center space-x-3 md:space-x-4">
+              {!isAuthPage && (
+                <button
+                  className="md:hidden p-2 rounded-full text-emerald-600 hover:bg-emerald-100 transition"
+                  onClick={toggleMobileMenu}
+                >
+                  {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              )}
               <button
-                className="md:hidden p-2 rounded-full text-emerald-600 hover:bg-emerald-100 transition"
-                onClick={toggleMobileMenu}
+                onClick={handleAuthClick}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm bg-emerald-600 text-white hover:bg-emerald-700 transition"
+                disabled={loading}
               >
-                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-              <button
-              onClick={signOut}
-              className="px-6 py-2 rounded-xl bg-emerald-50 flex text-sm text-emerald-600 hover:bg-emerald-100 transition-colors">
-                <User className="w-5 h-5" /> {authenticated === null ? 'Loading...' : authenticated ? 'Sign Out' : 'Sign In'}
+                {authenticated === null || loading ? (
+                  'Loading...'
+                ) : authenticated ? (
+                  <>
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </>
+                )}
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-emerald-100 shadow-xl transform transition-transform duration-300 ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:hidden`}
-      >
-        <div className="p-6 space-y-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.key}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={`block px-4 py-2 rounded-xl text-sm font-medium ${
-                isActive(item.href)
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </div>
+      {/* Mobile Sidebar (Only on non-auth pages) */}
+      {!isAuthPage && (
+        <>
+          <div
+            className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-emerald-100 shadow-xl transform transition-transform duration-300 ${
+              mobileOpen ? 'translate-x-0' : '-translate-x-full'
+            } md:hidden`}
+          >
+            <div className="p-6 space-y-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-4 py-2 rounded-xl text-sm font-medium ${
+                    isActive(item.href)
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-      {/* Backdrop */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
-          onClick={toggleMobileMenu}
-        />
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  handleAuthClick();
+                }}
+                className="flex items-center gap-2 w-full px-4 py-2 rounded-xl text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700"
+                disabled={loading}
+              >
+                {authenticated === null || loading ? (
+                  'Loading...'
+                ) : authenticated ? (
+                  <>
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Backdrop */}
+          {mobileOpen && (
+            <div
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
+              onClick={toggleMobileMenu}
+            />
+          )}
+        </>
       )}
     </>
   );

@@ -1,7 +1,8 @@
 export interface ConsultationData {
   id: string;
-  date: string;
-  symptoms: string[];
+  createdAt: string;
+  symptoms: string;
+  formData: PersonalFormData;
   diagnosis: string;
   recommendations: string[];
   type: 'voice' | 'report';
@@ -23,7 +24,7 @@ export interface DoshaResult {
 }
 
 export interface PersonalFormData {
-  name: string;
+    name: string;
     age: number;
     gender: string;
     symptoms: string;
