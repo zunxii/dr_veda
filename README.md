@@ -14,9 +14,7 @@ Dr. Veda is an AI-powered voice consultation app that allows users to speak natu
 
 ## 🚀 Demo
 
-🌍 **[Live Demo](https://dr-veda-demo.vercel.app)**
-
-🧪 **Test Login**: Not implemented / optional
+🌍 **[Live Demo]((https://dr-veda.vercel.app/))**
 
 ## 📸 Screenshots
 
